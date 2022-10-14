@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>AWAC - Choosing data</title>
+    <link rel="stylesheet" type="text/css" href="http://www.jeasyui.com/easyui/themes/black/easyui.css">
+    <link rel="stylesheet" type="text/css" href="https://www.jeasyui.com/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="https://www.jeasyui.com/easyui/demo/demo.css">
+    <script type="text/javascript" src=" https://js.zohostatic.com/support/static/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="http://www.jeasyui.com/easyui/jquery.easyui.min.js"></script>
+</head>
+<body>
+    <link href="datalist.css" rel="stylesheet" type="text/css">
+    <input type="hidden" id="filter" value="<%= JSON.stringify(data) %>" />
+    <input type="hidden" id="url" value="<%= url%>" />
+    <h2>Choosing data</h2>
+    <form action="/node_test" method ="POST">
+        <input type="hidden" id="array" name="array">
+        <input type="submit" value="submit">
+    </form> 
+    <div style="margin:20px 0;"></div>
+    <script language="javascript">
+        function numSorter(a,b){
+            a = parseFloat(a);
+            b = parseFloat(b);
+            return a==b?0:(a>b?1:-1);
+        }
+        var list= new Array();
+    var list_text={"children":[]};
+    var num=0
+        var list2={"tags":[],"ids":[],url:document.getElementById("url").value}
+    $(document).ready(function(){ 
+            var list= new Array();
+            var filter = JSON.parse(document.getElementById("filter").value);       
+            $('#tree1').datagrid({
+                data:filter,
+
+                method: 'get',
+                
+                rownumbers:true,
+                singleSelect:false,
+                collapsible:true,
+                remoteSort:false,
+                multiSort:true,
+                columns:[[
+                    {title:'id',field:'id',checkbox:true,width:50,sortable:true},
+                    {title:'num',field:'num',width:50,sortable:true},
+                    {title:'tag',field:'tag',width:50,sortable:true},
+                    {title:'text',field:'text',width:500,sortable:true},
+                    {title:'attributes_class',field:'attributes_class',width:600,sortable:true}
+                ]],
+                onCheck:function(node,checked)
+                    {
+                        var msg="id=" + filter[node].id + "    num="+ filter[node].num + "      " + filter[node].text + "     checked=" + checked;
+                            ////python
+                            var num=filter[node].num
+                            var tag=filter[node].tag
+                            var text=filter[node].text
+                            var attributes_class=filter[node].attributes_class
+
+                            list_text.children.push({
+                                tag,num,text,attributes_class
+                            });
+                    
+                            document.getElementById("array").value=JSON.stringify(list_text.children)
+                    },
+                    onUncheck:function(node,checked){
+
+                            for (var i = 0; i < list_text.children.length; i++) {
+                                if(list_text.children[i].text!=undefined&&list_text.children[i].text==filter[node].text){
+                                    list_text.children.splice(i,1) 
+                                }
+                            }
+                            document.getElementById("array").value=JSON.stringify(list_text.children)
+                    }
+            });
+    });
+    </script>
+    <table id="tree1" class="easyui-datagrid" title="Basic DataGrid">
+        <thead>
+            <tr>
+                <th data-options="field:'tag',checkbox:true"></th>
+                <th data-options="field:'text',width:80">Item ID</th>
+            </tr>
+        </thead>
+    </table>
+    
+</body>
+</html>

@@ -1,0 +1,27 @@
+h1{
+    color:blue;
+    font-family:fantasy;
+    font-size:70px;
+}
+h2{
+    color:blue;
+    font-family:fantasy;
+    font-size:55px;
+}
+.tree1{
+    background-color:white
+}
+#buttom{
+    border-radius:10px;
+    width: 100px;
+    height: 30px;
+}
+html{
+    text-align:center;
+    background-color:white
+}
+#tree1{
+    color:white;
+
+    background-color:white
+}
